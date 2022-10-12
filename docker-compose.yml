@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+    nginx:
+        image: nginx
+        volumes:
+            - ./config/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+        ports:
+            - 8000:80
+        depends_on:
+            - backend
+
+
+    postgres:
+        image: postgres:12
+        restart: always
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - '5432:5432'
+        volumes:
+            - db-data:/var/lib/postgresql/data:cached
+
+    backend:
+        build: ./backend
+        container_name: fastapi-application
+        command: uvicorn app.main:app --host 0.0.0.0 --port 8080
+        ports:
+            - 8080:8080
+        tty: true
+        # environment:
+        #     PYTHONPATH: .
+        #     DATABASE_URL: 'postgresql://{{postgres_user}}:{{postgres_password}}@postgres:5432/{{postgres_user}}'
+        depends_on:
+            - postgres
+
+#    frontend:
+#        build:
+#            context: frontend
+#            dockerfile: Dockerfile
+#        stdin_open: true
+#        volumes:
+#            - './frontend:/app:cached'
+#            - './frontend/node_modules:/app/node_modules:cached'
+#        environment:
+#            - NODE_ENV=development
+
+
+volumes:
+    db-data:
