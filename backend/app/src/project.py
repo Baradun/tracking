@@ -1,3 +1,4 @@
+from .user import User
 
 class Project:
 
@@ -5,6 +6,7 @@ class Project:
 
     def __init__(self, name):
         self._id = Project.__global_id
+        self._users = dict()
         Project.__global_id += 1
 
         self._name = name
@@ -22,15 +24,18 @@ class Project:
         return self._is_archived
 
     @property
-    def users(self) -> list:
+    def users(self) -> dict:
         return self._users
 
     @property
     def tasks(self) -> list:
         return self._tasks
 
-    def addUser(self, user):
-        self._users.append(user)
+    def addUser(self, login, password):
+        self._users[login] = User(login, password)
+
+    def removeUser(self, login):
+        del self._users[login]
 
     def assignTaskToUser(self, task, user):
         pass

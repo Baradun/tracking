@@ -1,5 +1,3 @@
-from user import User
-
 class Task:
 
     _global_id = 0
@@ -36,7 +34,7 @@ class Task:
         self._status = status
 
     @property
-    def author(self) -> User:
+    def author(self):
         return self._author
 
     @property
