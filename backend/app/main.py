@@ -15,26 +15,44 @@ app = FastAPI()
 projects = dict()
 users = dict()
 
+# add user to project
 @app.post("/user/attach")
-def attach_user(project_id: int, user_login: str):
+def attach_user(projectId: int, userLogin: str):
     # debug code
     if len(projects) == 0:
-        projects[project_id] = Project("")
+        projects[projectId] = Project("123")
     if len(users) == 0:
-        users[user_login] = User(user_login, "qwerty")
+        users[userLogin] = User(userLogin, "qwerty")
     # end debug code
 
-    user = users[user_login]
-    projects[project_id].addUser(user_login, "qwerty")
+    user = users[userLogin]
+    projects[projectId].addUser(userLogin, "qwerty")
     return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content={ "status": True }
         )
 
+# remove user from project
 @app.post("/user/dettach")
-def detach_user(project_id: int, user_login: str):
-    projects[project_id].removeUser(user_login)
+def detach_user(projectId: int, userLogin: str):
+    projects[projectId].removeUser(userLogin)
     return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content={ "status": True }
+    )
+
+# get all users
+@app.post("/users")
+def get_users():
+    return JSONResponse(
+                status_code=status.HTTP_200_OK,
+                content={ "users": list(users.keys()) }
+    )
+
+# get all users from project
+@app.post("/projects/users")
+def get_users_from_project(projectId: int):
+    return JSONResponse(
+                status_code=status.HTTP_200_OK,
+                content={ "users": list(projects[projectId].users.keys()) }
     )
