@@ -23,7 +23,7 @@ class Task:
     def description(self) -> str:
         return self._description
 
-    @name.setter
+    @description.setter
     def description(self, description):
         self._description = description
 
@@ -31,7 +31,7 @@ class Task:
     def status(self):
         return self._status
 
-    @name.setter
+    @status.setter
     def status(self, status):
         self._status = status
 
@@ -43,6 +43,6 @@ class Task:
     def executor(self) -> str:
         return self._executor
 
-    @name.setter
-    def name(self, executor):
+    @executor.setter
+    def executor(self, executor):
         self._executor = executor
