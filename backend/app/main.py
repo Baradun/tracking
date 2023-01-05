@@ -10,10 +10,25 @@ sys.path.append(fpath)
 from src.project import Project
 from src.user import User
 
+from models import users_scheme
+import databases
+
+DATABASE_URL = "postgresql://postgres:123456@localhost/TestDB"
+database = databases.Database(DATABASE_URL)
+
 app = FastAPI()
 
 projects = dict()
 users = dict()
+
+@app.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 # add user to project
 @app.post("/user/attach")
@@ -43,10 +58,11 @@ def detach_user(projectId: int, userLogin: str):
 
 # get all users
 @app.post("/users")
-def get_users():
+async def get_users():
     return JSONResponse(
                 status_code=status.HTTP_200_OK,
                 content={ "users": list(users.keys()) }
+                # content={ "users": database.fetch_all(query) }
     )
 
 # get all users from project
