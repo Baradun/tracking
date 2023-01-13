@@ -1,2 +1,8 @@
 fastapi
 uvicorn
+databases
+sqlalchemy
+alembic
+psycopg2-binary
+asyncpg
+fastapi-utils
